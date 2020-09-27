@@ -1,0 +1,24 @@
+{
+  "name": "ponaserv",
+  "version": "0.0.1",
+  "description": "A mini but opinionated framework for your express apps.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "express",
+    "framework",
+    "services"
+  ],
+  "author": "Joaquim Neto <joaquimmy@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "jest": "^26.4.2"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "recursive-readdir": "^2.2.2"
+  }
+}

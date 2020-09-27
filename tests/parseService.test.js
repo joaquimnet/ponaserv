@@ -1,0 +1,132 @@
+const {
+  getActionHandler,
+  getMiddleware,
+  parseRouteName,
+  parseRouteHandlers,
+  getRoutes,
+} = require('../src/functions');
+
+describe('getActionHandler ->', () => {
+  test('should get handler if function', () => {
+    const actionItem1 = function () {};
+    const actionItem2 = async function () {};
+    expect(getActionHandler(actionItem1)).toBe(actionItem1);
+    expect(getActionHandler(actionItem2)).toBe(actionItem2);
+  });
+
+  test('should get handler if object', () => {
+    const actionItem1 = { handler: function () {} };
+    const actionItem2 = { async handler() {} };
+    expect(getActionHandler(actionItem1)).toBe(actionItem1.handler);
+    expect(getActionHandler(actionItem2)).toBe(actionItem2.handler);
+  });
+});
+
+describe('getMiddleware ->', () => {
+  test('should return empty array if no middleware provided', () => {
+    const actionItem1 = null;
+    const actionItem2 = {};
+    const actionItem3 = { middleware: null };
+    expect(getMiddleware(actionItem1)).toEqual([]);
+    expect(getMiddleware(actionItem2)).toEqual([]);
+    expect(getMiddleware(actionItem3)).toEqual([]);
+  });
+
+  test('should return an array of middlewares', () => {
+    const middleware = () => {};
+    const actionItem1 = { middleware: [middleware] };
+    const actionItem2 = { middleware: [middleware, middleware] };
+    expect(getMiddleware(actionItem1)).toEqual([middleware]);
+    expect(getMiddleware(actionItem2)).toEqual([middleware, middleware]);
+  });
+});
+
+describe('parseRouteName ->', () => {
+  test('should return the correct method name', () => {
+    const route1 = 'GET /user';
+    const route2 = 'POST /user';
+    const route3 = 'DELETE /user';
+    const route4 = 'PUT /user';
+    const route5 = 'PATCH /user';
+    expect(parseRouteName(route1)[0]).toEqual('get');
+    expect(parseRouteName(route2)[0]).toEqual('post');
+    expect(parseRouteName(route3)[0]).toEqual('delete');
+    expect(parseRouteName(route4)[0]).toEqual('put');
+    expect(parseRouteName(route5)[0]).toEqual('patch');
+  });
+  test('should return the correct endpoint', () => {
+    const route1 = 'GET /';
+    const route2 = 'POST /hello';
+    const route3 = 'DELETE /photo/:id';
+    const route4 = 'PUT /user/:id';
+    const route5 = 'PATCH /user/friends';
+    const route6 = 'GET ';
+    const route7 = 'GET';
+    expect(parseRouteName(route1)[1]).toEqual('/');
+    expect(parseRouteName(route2)[1]).toEqual('/hello');
+    expect(parseRouteName(route3)[1]).toEqual('/photo/:id');
+    expect(parseRouteName(route4)[1]).toEqual('/user/:id');
+    expect(parseRouteName(route5)[1]).toEqual('/user/friends');
+    expect(parseRouteName(route6)[1]).toEqual('');
+    expect(parseRouteName(route7)[1]).toEqual('');
+  });
+});
+
+describe('parseRouteHandlers ->', () => {
+  test('should return the correct values', () => {
+    const service = {
+      name: 'users',
+      routes: {
+        'GET /': 'getUser',
+      },
+      actions: {
+        getUser() {},
+      },
+    };
+
+    const [method, endpoint, middleware, actionHandler, actionName] = parseRouteHandlers(
+      service,
+      'GET /',
+    );
+
+    expect(method).toEqual('get');
+    expect(endpoint).toEqual('/');
+    expect(middleware).toEqual([]);
+    expect(actionHandler).toBe(service.actions.getUser);
+    expect(actionName).toEqual('getUser');
+  });
+});
+
+describe('getRoutes ->', () => {
+  test('should return the correct routes', () => {
+    const service = {
+      name: 'users',
+      routes: {
+        'GET /users': 'getUser',
+        'POST /user': 'createUser',
+      },
+      actions: {
+        getUser() {},
+        createUser: {
+          middleware: [() => {}],
+          handler() {},
+        },
+      },
+    };
+
+    const routes = getRoutes(service);
+
+    expect(routes.length).toEqual(2);
+
+    expect(routes[0].method).toEqual('get');
+    expect(routes[1].method).toEqual('post');
+
+    expect(routes[0].args[0]).toEqual('/users');
+    expect(routes[1].args[0]).toEqual('/user');
+
+    expect(routes[1].args[1]).toBe(service.actions.createUser.middleware[0]);
+
+    expect(routes[0].args[1]).toBe(service.actions.getUser);
+    expect(routes[1].args[2]).toBe(service.actions.createUser.handler);
+  });
+});

@@ -13,7 +13,20 @@ async function ponaserv(app, options = {}) {
 
   const services = await requireFiles(serviceDir);
 
+  const loadedServices = [];
+
   for (const service of services) {
+    if (options.debug) {
+      console.log(`PONA > Loading service ${service.name}`);
+      if (loadedServices.includes(service.name)) {
+        console.log(
+          `PONA > ERROR: Service ${service.name} already loaded. Please change the name to be unique.`,
+        );
+        continue;
+      }
+      loadedServices.push(service.name);
+    }
+
     if (!service.routes) continue;
 
     const routes = getRoutes(service);
@@ -21,7 +34,12 @@ async function ponaserv(app, options = {}) {
     if (!routes.length) continue;
 
     const router = Router();
-    routes.forEach((route) => router[route.method](...route.args));
+    routes.forEach((route) => {
+      if (options.debug) {
+        console.log(`PONA > Loading route ${route.method.toUpperCase()} ${route.args[0]}`);
+      }
+      router[route.method](...route.args);
+    });
     router.use(e404);
     app.use(router);
   }

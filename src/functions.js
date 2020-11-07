@@ -1,4 +1,5 @@
 const recursive = require('recursive-readdir');
+const Validator = require('fastest-validator');
 
 async function requireFiles(dir) {
   const files = await recursive(dir, ['!*.service.js']);
@@ -21,10 +22,28 @@ function getActionHandler(actionItem) {
 }
 
 function getMiddleware(actionItem) {
-  if (!isObject(actionItem) || !actionItem.middleware || !Array.isArray(actionItem.middleware)) {
-    return [];
+  const middleware = [];
+  if (actionItem.params) {
+    const v = new Validator();
+    middleware.push((req, res, next) => {
+      let reqParams = {};
+      if (req.body && isObject(req.body)) {
+        reqParams = {...reqParams, ...req.body};
+      }
+      if (req.query && isObject(req.query)) {
+        reqParams = {...reqParams, ...req.query};
+      }
+      const result = v.validate(reqParams, actionItem.params);
+      if (result === true) {
+        return next();
+      }
+      return res.status(422).json(result);
+    });
   }
-  return actionItem.middleware;
+  if (!isObject(actionItem) || !actionItem.middleware || !Array.isArray(actionItem.middleware)) {
+    return middleware;
+  }
+  return [...middleware, ...actionItem.middleware];
 }
 
 function parseRouteHandlers(service, routeName) {

@@ -21,6 +21,27 @@ function getActionHandler(actionItem) {
   return null;
 }
 
+function bindActionsAndMethods(service) {
+  if (service.actions && isObject(service.actions)) {
+    for (let actionName of Object.keys(service.actions)) {
+      const action = service.actions[actionName];
+      if (typeof action === 'function') {
+        service.actions[actionName] = action.bind(service);
+      } else if (isObject(action) && typeof action.handler === 'function') {
+        service.actions[actionName].handler = action.handler.bind(service);
+      }
+    }
+  }
+
+  if (service.methods && isObject(service.methods)) {
+    for (let method of Object.keys(service.methods)) {
+      if (typeof method === 'function') {
+        service.methods[method] = method.bind(service);
+      }
+    }
+  }
+}
+
 function getMiddleware(actionItem) {
   const middleware = [];
   if (actionItem.params) {
@@ -28,10 +49,10 @@ function getMiddleware(actionItem) {
     middleware.push((req, res, next) => {
       let reqParams = {};
       if (req.body && isObject(req.body)) {
-        reqParams = {...reqParams, ...req.body};
+        reqParams = { ...reqParams, ...req.body };
       }
       if (req.query && isObject(req.query)) {
-        reqParams = {...reqParams, ...req.query};
+        reqParams = { ...reqParams, ...req.query };
       }
       const result = v.validate(reqParams, actionItem.params);
       if (result === true) {
@@ -60,6 +81,8 @@ function parseRouteHandlers(service, routeName) {
 
 function getRoutes(service) {
   const routes = [];
+
+  bindActionsAndMethods(service);
 
   for (const route of Object.keys(service.routes)) {
     const [method, endpoint, middleware, handler, actionName] = parseRouteHandlers(service, route);

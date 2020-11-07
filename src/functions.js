@@ -43,7 +43,7 @@ function getMiddleware(actionItem) {
   if (!isObject(actionItem) || !actionItem.middleware || !Array.isArray(actionItem.middleware)) {
     return middleware;
   }
-  return [...middleware, ...actionItem.middleware];
+  return [...actionItem.middleware, ...middleware];
 }
 
 function parseRouteHandlers(service, routeName) {

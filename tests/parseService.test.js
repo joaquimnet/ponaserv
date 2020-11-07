@@ -4,21 +4,37 @@ const {
   parseRouteName,
   parseRouteHandlers,
   getRoutes,
+  bindActionsAndMethods,
+  VirtualSymbol,
 } = require('../src/functions');
 
 describe('getActionHandler ->', () => {
   test('should get handler if function', () => {
-    const actionItem1 = function () {};
-    const actionItem2 = async function () {};
-    expect(getActionHandler(actionItem1)).toBe(actionItem1);
-    expect(getActionHandler(actionItem2)).toBe(actionItem2);
+    const service = {
+      name: 'user',
+      actions: {
+        be() {},
+        async nice() {},
+      },
+    };
+    bindActionsAndMethods(service);
+    expect(getActionHandler('be', service)).toBe(service[VirtualSymbol].be);
+    expect(getActionHandler('nice', service)).toBe(service[VirtualSymbol].nice);
   });
 
   test('should get handler if object', () => {
-    const actionItem1 = { handler: function () {} };
-    const actionItem2 = { async handler() {} };
-    expect(getActionHandler(actionItem1)).toBe(actionItem1.handler);
-    expect(getActionHandler(actionItem2)).toBe(actionItem2.handler);
+    const service = {
+      name: 'user',
+      actions: {
+        be: {
+          handler() {},
+        },
+        nice: { async handler() {} },
+      },
+    };
+    bindActionsAndMethods(service);
+    expect(getActionHandler('be', service)).toBe(service[VirtualSymbol].be);
+    expect(getActionHandler('nice', service)).toBe(service[VirtualSymbol].nice);
   });
 });
 
@@ -84,6 +100,8 @@ describe('parseRouteHandlers ->', () => {
       },
     };
 
+    bindActionsAndMethods(service);
+
     const [method, endpoint, middleware, actionHandler, actionName] = parseRouteHandlers(
       service,
       'GET /',
@@ -92,7 +110,7 @@ describe('parseRouteHandlers ->', () => {
     expect(method).toEqual('get');
     expect(endpoint).toEqual('/');
     expect(middleware).toEqual([]);
-    expect(actionHandler).toBe(service.actions.getUser);
+    expect(actionHandler).toBe(service[VirtualSymbol].getUser);
     expect(actionName).toEqual('getUser');
   });
 });
@@ -126,7 +144,43 @@ describe('getRoutes ->', () => {
 
     expect(routes[1].args[1]).toBe(service.actions.createUser.middleware[0]);
 
-    expect(routes[0].args[1]).toBe(service.actions.getUser);
-    expect(routes[1].args[2]).toBe(service.actions.createUser.handler);
+    expect(routes[0].args[1]).toBe(service[VirtualSymbol].getUser);
+    expect(routes[1].args[2]).toBe(service[VirtualSymbol].createUser);
+  });
+});
+
+describe('binding ->', () => {
+  test('should bind actions and methods to the service', () => {
+    const service = {
+      name: 'users',
+      routes: {
+        'GET /users': 'getUser',
+        'POST /user': 'createUser',
+      },
+      actions: {
+        getUser() {
+          return this.getString();
+        },
+        createUser: {
+          middleware: [() => {}],
+          handler() {
+            return this.getNumber();
+          },
+        },
+      },
+      methods: {
+        getString() {
+          return 'hello';
+        },
+        getNumber() {
+          return 2;
+        },
+      },
+    };
+
+    getRoutes(service);
+
+    expect(service[VirtualSymbol].getUser()).toEqual('hello');
+    expect(service[VirtualSymbol].createUser()).toEqual(2);
   });
 });

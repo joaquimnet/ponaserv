@@ -40,9 +40,9 @@ async function ponaserv(app, options = {}) {
       }
       router[route.method](...route.args);
     });
-    router.use(e404);
     app.use(router);
   }
+  app.use(e404);
 }
 
 module.exports = ponaserv;

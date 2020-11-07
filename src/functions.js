@@ -66,6 +66,9 @@ function getMiddleware(actionItem) {
       if (req.query && isObject(req.query)) {
         reqParams = { ...reqParams, ...req.query };
       }
+      if (req.params && isObject(req.params)) {
+        reqParams = { ...reqParams, ...req.params };
+      }
       const result = v.validate(reqParams, actionItem.params);
       if (result === true) {
         return next();

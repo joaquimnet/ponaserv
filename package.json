@@ -18,6 +18,7 @@
     "jest": "^26.4.2"
   },
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "express": "^4.17.1",
     "fastest-validator": "^1.8.0",
     "recursive-readdir": "^2.2.2"

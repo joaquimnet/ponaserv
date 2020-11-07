@@ -1,6 +1,8 @@
 const recursive = require('recursive-readdir');
 const Validator = require('fastest-validator');
 
+const VirtualSymbol = Symbol('Virtual Ponatech Service');
+
 async function requireFiles(dir) {
   const files = await recursive(dir, ['!*.service.js']);
   return files.map(require);
@@ -11,32 +13,39 @@ function parseRouteName(route) {
   return [method.toLowerCase().replace(/[^\w]/g, ''), endpoint || ''];
 }
 
-function getActionHandler(actionItem) {
-  if (typeof actionItem === 'function') {
-    return actionItem;
+function getActionHandler(actionName, service) {
+  if (typeof service.actions[actionName] === 'function') {
+    return service[VirtualSymbol][actionName];
   }
-  if (isObject(actionItem) && actionItem.handler) {
-    return actionItem.handler;
+  if (isObject(service.actions[actionName]) && service.actions[actionName].handler) {
+    return service[VirtualSymbol][actionName];
   }
   return null;
 }
 
 function bindActionsAndMethods(service) {
+  if (!isObject(service)) {
+    return;
+  }
+
+  const virtualService = { ...service };
+  service[VirtualSymbol] = virtualService;
+
   if (service.actions && isObject(service.actions)) {
     for (let actionName of Object.keys(service.actions)) {
       const action = service.actions[actionName];
       if (typeof action === 'function') {
-        service.actions[actionName] = action.bind(service);
+        virtualService[actionName] = action.bind(virtualService);
       } else if (isObject(action) && typeof action.handler === 'function') {
-        service.actions[actionName].handler = action.handler.bind(service);
+        virtualService[actionName] = action.handler.bind(virtualService);
       }
     }
   }
 
   if (service.methods && isObject(service.methods)) {
     for (let method of Object.keys(service.methods)) {
-      if (typeof method === 'function') {
-        service.methods[method] = method.bind(service);
+      if (typeof service.methods[method] === 'function') {
+        virtualService[method] = service.methods[method].bind(virtualService);
       }
     }
   }
@@ -44,6 +53,9 @@ function bindActionsAndMethods(service) {
 
 function getMiddleware(actionItem) {
   const middleware = [];
+  if (!isObject(actionItem) || actionItem === null) {
+    return middleware;
+  }
   if (actionItem.params) {
     const v = new Validator();
     middleware.push((req, res, next) => {
@@ -73,7 +85,7 @@ function parseRouteHandlers(service, routeName) {
   const actionName = service.routes[routeName];
   const actionObj = service.actions[actionName];
 
-  const actionHandler = getActionHandler(actionObj);
+  const actionHandler = getActionHandler(actionName, service);
   const middleware = getMiddleware(actionObj);
 
   return [method, endpoint, middleware, actionHandler, actionName];
@@ -108,4 +120,6 @@ module.exports = {
   getMiddleware,
   parseRouteHandlers,
   getRoutes,
+  bindActionsAndMethods,
+  VirtualSymbol,
 };

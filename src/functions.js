@@ -5,7 +5,6 @@ const VirtualSymbol = Symbol('Virtual Ponatech Service');
 
 async function requireFiles(dir) {
   const files = await recursive(dir, ['!*.service.[tj]s']);
-  console.log('files: ', files);
   const required = files.map(module.require);
   return required.map(r => r.default || r);
 }

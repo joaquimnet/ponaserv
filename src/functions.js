@@ -4,8 +4,9 @@ const Validator = require('fastest-validator');
 const VirtualSymbol = Symbol('Virtual Ponatech Service');
 
 async function requireFiles(dir) {
-  const files = await recursive(dir, ['!*.service.js']);
-  return files.map(require);
+  const files = await recursive(dir, ['!*.service.(t|j)s']);
+  const required = files.map(module.require);
+  return required.map(r => r.default || r);
 }
 
 function parseRouteName(route) {

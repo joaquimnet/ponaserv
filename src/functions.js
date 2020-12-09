@@ -6,7 +6,7 @@ const VirtualSymbol = Symbol('Virtual Ponatech Service');
 async function requireFiles(dir) {
   const files = await recursive(dir, ['!*.service.[tj]s']);
   const required = files.map(module.require);
-  return required.map(r => r.default || r);
+  return required.map((r) => r.default || r);
 }
 
 function parseRouteName(route) {
@@ -95,6 +95,32 @@ function parseRouteHandlers(service, routeName) {
   return [method, endpoint, middleware, actionHandler, actionName];
 }
 
+function handlerWrapper(handler) {
+  const handlerArgs = getArgs(handler);
+
+  const isExpress = handlerArgs[0] && ['req', 'request'].includes(handlerArgs[0].toLowerCase());
+
+  if (isExpress) {
+    return handler;
+  }
+
+  return function wrappedHandler(req, res, next) {
+    let reqParams = {};
+    if (req.body && isObject(req.body)) {
+      reqParams = { ...reqParams, ...req.body };
+    }
+    if (req.query && isObject(req.query)) {
+      reqParams = { ...reqParams, ...req.query };
+    }
+    if (req.params && isObject(req.params)) {
+      reqParams = { ...reqParams, ...req.params };
+    }
+
+    const ctx = { req, res, next, params: reqParams };
+    handler(ctx);
+  };
+}
+
 function getRoutes(service) {
   const routes = [];
 
@@ -107,7 +133,10 @@ function getRoutes(service) {
       throw new Error(`Handler for action ${actionName} not found in service ${service.name}`);
     }
 
-    routes.push({ method, args: [endpoint, ...middleware, handler] });
+    const wrappedHandler = handlerWrapper(handler);
+    Object.defineProperty(wrappedHandler, 'name', { value: handler.name });
+
+    routes.push({ method, args: [endpoint, ...middleware, wrappedHandler] });
   }
 
   return routes;
@@ -115,6 +144,31 @@ function getRoutes(service) {
 
 function isObject(value) {
   return value && typeof value === 'object' && value.constructor === Object;
+}
+
+function getArgs(func) {
+  let matches = func.toString().match(/((?<=\().+?(?=\)))/);
+  if (!matches) {
+    matches = func.toString().match(/((?<=(async|^(?!async))).+(?=\s=>))/);
+  }
+
+  if (!matches) {
+    return [];
+  }
+
+  const args = matches[1];
+
+  // Split the arguments string into an array comma delimited.
+  return args
+    .split(',')
+    .map(function (arg) {
+      // Ensure no inline comments are parsed and trim the whitespace.
+      return arg.replace(/\/\*.*\*\//, '').trim();
+    })
+    .filter(function (arg) {
+      // Ensure no undefined values are added.
+      return arg;
+    });
 }
 
 module.exports = {
@@ -125,5 +179,7 @@ module.exports = {
   parseRouteHandlers,
   getRoutes,
   bindActionsAndMethods,
+  getArgs,
+  handlerWrapper,
   VirtualSymbol,
 };

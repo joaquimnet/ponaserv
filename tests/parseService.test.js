@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const {
   getActionHandler,
   getMiddleware,
@@ -5,6 +6,8 @@ const {
   parseRouteHandlers,
   getRoutes,
   bindActionsAndMethods,
+  getArgs,
+  handlerWrapper,
   VirtualSymbol,
 } = require('../src/functions');
 
@@ -144,8 +147,8 @@ describe('getRoutes ->', () => {
 
     expect(routes[1].args[1]).toBe(service.actions.createUser.middleware[0]);
 
-    expect(routes[0].args[1]).toBe(service[VirtualSymbol].getUser);
-    expect(routes[1].args[2]).toBe(service[VirtualSymbol].createUser);
+    expect(routes[0].args[1].name).toBe(service[VirtualSymbol].getUser.name);
+    expect(routes[1].args[2].name).toBe(service[VirtualSymbol].createUser.name);
   });
 });
 
@@ -182,5 +185,60 @@ describe('binding ->', () => {
 
     expect(service[VirtualSymbol].getUser()).toEqual('hello');
     expect(service[VirtualSymbol].createUser()).toEqual(2);
+  });
+});
+
+describe('getArgs ->', () => {
+  test('should correctly detect (req, res)', () => {
+    const a = function (req, res) {};
+    const b = (req, res) => {};
+    const c = async (req, res) => {};
+    const d = async function (req, res) {};
+
+    expect(getArgs(a)).toEqual(['req', 'res']);
+    expect(getArgs(b)).toEqual(['req', 'res']);
+    expect(getArgs(c)).toEqual(['req', 'res']);
+    expect(getArgs(d)).toEqual(['req', 'res']);
+  });
+  test('should correctly detect (req, res, next)', () => {
+    const e = (req, res, next) => {};
+    const f = function (req, res, next) {};
+    const g = async (req, res, next) => {};
+    const h = async function (req, res, next) {};
+
+    expect(getArgs(e)).toEqual(['req', 'res', 'next']);
+    expect(getArgs(f)).toEqual(['req', 'res', 'next']);
+    expect(getArgs(g)).toEqual(['req', 'res', 'next']);
+    expect(getArgs(h)).toEqual(['req', 'res', 'next']);
+  });
+  test('should correctly detect (ctx)', () => {
+    const i = (ctx) => {};
+    const j = function (ctx) {};
+    const k = async (ctx) => {};
+    const l = async function (ctx) {};
+    const m = async function handler(ctx) {};
+
+    expect(getArgs(i)).toEqual(['ctx']);
+    expect(getArgs(j)).toEqual(['ctx']);
+    expect(getArgs(k)).toEqual(['ctx']);
+    expect(getArgs(l)).toEqual(['ctx']);
+    expect(getArgs(m)).toEqual(['ctx']);
+  });
+});
+
+describe('handlerWrapper ->', () => {
+  test('should pass original handler if express like parameters', () => {
+    const handler = (req, res) => {};
+    const handler2 = function (req, res, next) {};
+
+    expect(handlerWrapper(handler)).toBe(handler);
+    expect(handlerWrapper(handler2)).toBe(handler2);
+  });
+  test('should pass wrapped handler if not express like parameters', () => {
+    const handler = (ctx) => {};
+    const handler2 = function ({ params }) {};
+
+    expect(handlerWrapper(handler).name).toBe('wrappedHandler');
+    expect(handlerWrapper(handler2).name).toBe('wrappedHandler');
   });
 });

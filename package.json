@@ -14,9 +14,9 @@
   "author": "Joaquim Neto <joaquimmy@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^26.0.18",
-    "eslint": "^7.10.0",
-    "jest": "^26.4.2"
+    "@types/jest": "26.0.18",
+    "eslint": "7.10.0",
+    "jest": "26.4.2"
   },
   "dependencies": {
     "app-root-path": "^3.0.0",

@@ -22,6 +22,6 @@
     "app-root-path": "^3.0.0",
     "express": "^4.17.1",
     "fastest-validator": "^1.8.0",
-    "recursive-readdir": "^2.2.2"
+    "recursive-readdir": "^2.2.3"
   }
 }

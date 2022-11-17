@@ -1,20 +1,20 @@
-const recursive = require('recursive-readdir');
-const Validator = require('fastest-validator');
+import recursive from 'recursive-readdir';
+import Validator from 'fastest-validator';
 
-const VirtualSymbol = Symbol('Virtual Ponatech Service');
+export const VirtualSymbol = Symbol('Virtual Ponatech Service');
 
-async function requireFiles(dir) {
+export async function requireFiles(dir) {
   const files = await recursive(dir, ['!*.service.[tj]s']);
   const required = files.map(module.require);
   return required.map((r) => r.default || r);
 }
 
-function parseRouteName(route) {
+export function parseRouteName(route) {
   const [method, endpoint] = route.split(/ +/);
   return [method.toLowerCase().replace(/[^\w]/g, ''), endpoint || ''];
 }
 
-function getActionHandler(actionName, service) {
+export function getActionHandler(actionName, service) {
   if (typeof service.actions[actionName] === 'function') {
     return service[VirtualSymbol][actionName];
   }
@@ -24,7 +24,7 @@ function getActionHandler(actionName, service) {
   return null;
 }
 
-function bindActionsAndMethods(service) {
+export function bindActionsAndMethods(service) {
   if (!isObject(service)) {
     return;
   }
@@ -52,7 +52,7 @@ function bindActionsAndMethods(service) {
   }
 }
 
-function getMiddleware(actionItem) {
+export function getMiddleware(actionItem) {
   const middleware: any[] = [];
   if (!isObject(actionItem) || actionItem === null) {
     return middleware;
@@ -83,7 +83,7 @@ function getMiddleware(actionItem) {
   return [...actionItem.middleware, ...middleware];
 }
 
-function parseRouteHandlers(service, routeName) {
+export function parseRouteHandlers(service, routeName) {
   const [method, endpoint] = parseRouteName(routeName);
 
   const actionName = service.routes[routeName];
@@ -95,7 +95,7 @@ function parseRouteHandlers(service, routeName) {
   return [method, endpoint, middleware, actionHandler, actionName];
 }
 
-function handlerWrapper(handler) {
+export function handlerWrapper(handler) {
   const handlerArgs = getArgs(handler);
 
   const isExpress = handlerArgs[0] && ['req', 'request'].includes(handlerArgs[0].toLowerCase());
@@ -121,7 +121,7 @@ function handlerWrapper(handler) {
   };
 }
 
-function getRoutes(service) {
+export function getRoutes(service) {
   const routes: any[] = [];
 
   bindActionsAndMethods(service);
@@ -142,11 +142,11 @@ function getRoutes(service) {
   return routes;
 }
 
-function isObject(value) {
+export function isObject(value) {
   return value && typeof value === 'object' && value.constructor === Object;
 }
 
-function getArgs(func) {
+export function getArgs(func) {
   let matches = func.toString().match(/((?<=\().+?(?=\)))/);
   if (!matches) {
     matches = func.toString().match(/((?<=(async|^(?!async))).+(?=\s=>))/);
@@ -170,16 +170,3 @@ function getArgs(func) {
       return arg;
     });
 }
-
-module.exports = {
-  requireFiles,
-  parseRouteName,
-  getActionHandler,
-  getMiddleware,
-  parseRouteHandlers,
-  getRoutes,
-  bindActionsAndMethods,
-  getArgs,
-  handlerWrapper,
-  VirtualSymbol,
-};

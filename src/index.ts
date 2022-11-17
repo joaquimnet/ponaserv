@@ -1,11 +1,11 @@
-const { Router } = require('express');
-const root = require('app-root-path');
-const path = require('path');
+import { Router } from 'express';
+import { toString as root} from 'app-root-path';
+import path from 'path';
 
-const { requireFiles, getRoutes } = require('./functions');
+import { requireFiles, getRoutes } from './functions';
 
-async function ponaserv(app, options = {}) {
-  const serviceDir = options.services || path.join(root, 'services');
+async function ponaserv(app, options: any = {}) {
+  const serviceDir = options.services || path.join(root(), 'services');
   const e404 =
     options[404] && typeof options[404] === 'function'
       ? options[404]

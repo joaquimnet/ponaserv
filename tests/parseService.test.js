@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const {
   getActionHandler,
   getMiddleware,
@@ -9,7 +8,7 @@ const {
   getArgs,
   handlerWrapper,
   VirtualSymbol,
-} = require('../src/functions');
+} = require('../dist/functions');
 
 describe('getActionHandler ->', () => {
   test('should get handler if function', () => {

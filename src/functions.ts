@@ -53,7 +53,7 @@ function bindActionsAndMethods(service) {
 }
 
 function getMiddleware(actionItem) {
-  const middleware = [];
+  const middleware: any[] = [];
   if (!isObject(actionItem) || actionItem === null) {
     return middleware;
   }
@@ -122,7 +122,7 @@ function handlerWrapper(handler) {
 }
 
 function getRoutes(service) {
-  const routes = [];
+  const routes: any[] = [];
 
   bindActionsAndMethods(service);
 

@@ -24,5 +24,4 @@ yarn-error.log*
 build
 !/client/.env
 
-# stuff
-downloaded-images
+dist

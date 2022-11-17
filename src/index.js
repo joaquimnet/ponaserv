@@ -27,11 +27,15 @@ async function ponaserv(app, options = {}) {
       loadedServices.push(service.name);
     }
 
-    if (!service.routes) continue;
+    if (!service.routes) {
+      continue;
+    }
 
     const routes = getRoutes(service);
 
-    if (!routes.length) continue;
+    if (!routes.length) {
+      continue;
+    }
 
     const router = Router();
     routes.forEach((route) => {

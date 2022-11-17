@@ -77,7 +77,7 @@ function getMiddleware(actionItem) {
       return res.status(422).json(result);
     });
   }
-  if (!isObject(actionItem) || !actionItem.middleware || !Array.isArray(actionItem.middleware)) {
+  if (!(isObject(actionItem) && actionItem.middleware && Array.isArray(actionItem.middleware))) {
     return middleware;
   }
   return [...actionItem.middleware, ...middleware];

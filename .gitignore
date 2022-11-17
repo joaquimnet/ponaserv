@@ -25,3 +25,4 @@ build
 !/client/.env
 
 dist
+*.tgz

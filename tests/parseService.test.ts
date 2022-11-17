@@ -1,4 +1,4 @@
-const {
+import {
   getActionHandler,
   getMiddleware,
   parseRouteName,
@@ -8,7 +8,7 @@ const {
   getArgs,
   handlerWrapper,
   VirtualSymbol,
-} = require('../dist/functions');
+} from '../src/functions';
 
 describe('getActionHandler ->', () => {
   test('should get handler if function', () => {

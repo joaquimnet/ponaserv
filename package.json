@@ -4,7 +4,10 @@
   "description": "A mini but opinionated framework for your express apps.",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch --coverage=false",
+    "lint": "rome check src --apply-suggested",
+    "format": "rome format src --write"
   },
   "keywords": [
     "express",
@@ -15,8 +18,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "29.2.3",
-    "eslint": "8.27.0",
-    "jest": "29.3.1"
+    "jest": "29.3.1",
+    "rome": "^10.0.1"
   },
   "dependencies": {
     "app-root-path": "^3.1.0",

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { toString as root} from 'app-root-path';
+import { toString as root } from 'app-root-path';
 import path from 'path';
 
 import { requireFiles, getRoutes } from './functions';

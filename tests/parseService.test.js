@@ -230,9 +230,11 @@ describe('handlerWrapper ->', () => {
   test('should pass original handler if express like parameters', () => {
     const handler = (req, res) => {};
     const handler2 = function (req, res, next) {};
+    const service = { actions: { me: { async handler(req, res) {} } } };
 
     expect(handlerWrapper(handler)).toBe(handler);
     expect(handlerWrapper(handler2)).toBe(handler2);
+    expect(handlerWrapper(service.actions.me.handler)).toBe(service.actions.me.handler);
   });
   test('should pass wrapped handler if not express like parameters', () => {
     const handler = (ctx) => {};

@@ -2,7 +2,7 @@
   "name": "ponaserv",
   "version": "0.2.0",
   "description": "A mini but opinionated framework for your express apps.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest",

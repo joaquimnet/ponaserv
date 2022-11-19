@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="sw-js-blob-svg" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
+      <stop id="stop1" stop-color="rgba(248, 117, 55, 1)" offset="0"/>
+      <stop id="stop2" stop-color="rgba(251, 168, 31, 1)" offset="1"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sw-gradient)" d="M 75.065 15.756 C 82.055 21.782 87.097 30.406 89.388 40.094 C 91.795 49.781 91.565 60.651 86.982 68.92 C 82.399 77.19 73.461 82.979 63.378 87.941 C 53.18 93.022 41.721 97.275 34.159 93.376 C 26.711 89.359 22.93 77.072 19.034 66.676 C 15.023 56.161 10.784 47.537 10.669 38.203 C 10.669 28.87 14.794 18.828 22.013 12.921 C 29.232 7.014 39.43 5.124 49.169 5.832 C 58.909 6.541 67.961 9.849 75.065 15.756 Z" width="100%" height="100%" stroke-width="0" style="transition: all 0.3s ease 0s;"/>
+  <text style="fill: rgb(255, 255, 255); font-family: &quot;Brighly Crush Shine&quot;; font-size: 60px; white-space: pre;" x="34.869" y="70.362" transform="matrix(1.346674, 0, 0, 0.971874, -11.091914, 8.055322)">P</text>
+</svg>

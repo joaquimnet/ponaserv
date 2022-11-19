@@ -13,20 +13,23 @@ hero:
       text: Get Started
       link: /getting-started
     - theme: alt
-      text: View on GitHub
+      text: GitHub
       link: https://github.com/joaquimnet/ponaserv
+    - theme: alt
+      text: Examples
+      link: https://github.com/joaquimnet/ponaserv/tree/main/examples
 
 features:
   - icon: ⚡️
-    title: Adocs, The DX that can't be beat
-    details: Lorem ipsum...
-  - icon: 🎉
-    title: Power of Vue meets Markdown
-    details: Lorem ipsum...
-  - icon: 🔥
-    title: Simple and minimal, always
-    details: Lorem ipsum...
-  - icon: 🎀
-    title: Stylish and cool
-    details: Lorem ipsum...
+    title: Fast to setup
+    details: Just drop it in and add a service.
+  - icon: 🤓
+    title: Sane addition to express
+    details: This can be the C in your MVC.
+  - icon: 📦
+    title: Scalable
+    details: Each part of your API can be a different service.
+  - icon: 📝
+    title: Powerful validation
+    details: Validate your params with fastest-validator.
 ---

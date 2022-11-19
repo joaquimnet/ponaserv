@@ -1,4 +1,4 @@
-import recursive from 'recursive-readdir';
+import * as recursive from 'recursive-readdir';
 import Validator from 'fastest-validator';
 
 export const VirtualSymbol = Symbol('Virtual Ponatech Service');

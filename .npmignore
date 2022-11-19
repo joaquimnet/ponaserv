@@ -1,9 +1,0 @@
-src
-tests
-.github
-jest.config.js
-*.tgz
-renovate.json
-rome.json
-tsconfig.json
-Taskfile.yml

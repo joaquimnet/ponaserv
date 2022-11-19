@@ -1,10 +1,17 @@
-<center>
-<img src="https://raw.githubusercontent.com/joaquimnet/ponaserv/main/docs/public/logo.svg" width="256" height="256">
-</center>
+<p align="center">
+  <a href="https://ponaserv.vercel.app" target="_blank" rel="noopener noreferrer">
+    <img width="180" src="https://ponaserv.vercel.app/logo.svg" alt="Ponaserv logo">
+  </a>
+</p>
+<br/>
+<p align="center">
+  <a href="https://npmjs.com/package/ponaserv"><img src="https://img.shields.io/npm/v/ponaserv.svg" alt="npm package"></a>
+  <a href="https://github.com/joaquimnet/ponaserv/actions/workflows/main.yml"><img src="https://github.com/joaquimnet/ponaserv/actions/workflows/main.yml/badge.svg?branch=main" alt="build status"></a>
+  <a href="https://github.com/joaquimnet/ponaserv/blob/main/LICENSE.md"><img src="https://img.shields.io/npm/l/ponaserv" alt="license"></a>
+</p>
+<br/>
 
-# ponaserv
-
-[![NPM](https://img.shields.io/npm/v/ponaserv)](https://www.npmjs.com/package/ponaserv)
+# Ponaserv
 
 Easily map routes to request handlers.
 

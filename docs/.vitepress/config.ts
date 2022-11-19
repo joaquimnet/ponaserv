@@ -3,11 +3,14 @@ import { version } from '../../package.json';
 
 const config: Partial<SiteData<any>> = {
   title: 'Ponaserv',
-  description: 'An awesome docs template built by me',
+  description: 'Node library that lets you easily map routes to request handlers in express.',
   // @ts-expect-error
   lastUpdated: true,
   cleanUrls: 'without-subfolders',
-  head: [['meta', { name: 'theme-color', content: '#ff5719' }]],
+  head: [
+    ['meta', { name: 'theme-color', content: '#ff5719' }],
+    ['meta', { name: 'og:image', content: 'https://ponaserv.vercel.app/code.png' }],
+  ],
 
   themeConfig: {
     logo: '/logo.svg',
@@ -64,11 +67,17 @@ const config: Partial<SiteData<any>> = {
         text: 'More',
         collapsible: false,
         items: [
-          { text: 'Contributing', link: 'https://github.com/joaquimnet/ponaserv/blob/main/CONTRIBUTING.md' },
+          {
+            text: 'Contributing',
+            link: 'https://github.com/joaquimnet/ponaserv/blob/main/CONTRIBUTING.md',
+          },
           { text: 'License', link: 'https://github.com/joaquimnet/ponaserv/blob/main/LICENSE.md' },
-          { text: 'Changelog', link: 'https://github.com/joaquimnet/ponaserv/blob/main/CHANGELOG.md' },
+          {
+            text: 'Changelog',
+            link: 'https://github.com/joaquimnet/ponaserv/blob/main/CHANGELOG.md',
+          },
         ],
-      }
+      },
     ],
     footer: {
       message: 'Released under the MIT License.',

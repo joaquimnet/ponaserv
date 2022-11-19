@@ -2,6 +2,8 @@
 
 Ponaserv uses [fastest-validator](https://npmjs.com/package/fastest-validator) to validate the request body and query parameters.
 
+The validation rules you define in `params` property for each action will be tested against the request body, query strings and route parameters.
+
 ## Validation rules
 
 You can define validation rules for your actions in the `params` property of your action.

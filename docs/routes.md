@@ -1,6 +1,10 @@
 # Routes
 
-Each service can declare routes that are automatically loaded by Ponaserv. You can declare routes in the `routes` property of your service.
+Each service can declare routes that are automatically loaded by Ponaserv.
+
+## Adding a route
+
+You can declare routes in the `routes` property of your service.
 
 ```js
 module.exports = {

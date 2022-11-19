@@ -60,6 +60,15 @@ const config: Partial<SiteData<any>> = {
           { text: 'Middleware', link: '/middleware' },
         ],
       },
+      {
+        text: 'More',
+        collapsible: false,
+        items: [
+          { text: 'Contributing', link: 'https://github.com/joaquimnet/ponaserv/blob/main/CONTRIBUTING.md' },
+          { text: 'License', link: 'https://github.com/joaquimnet/ponaserv/blob/main/LICENSE.md' },
+          { text: 'Changelog', link: 'https://github.com/joaquimnet/ponaserv/blob/main/CHANGELOG.md' },
+        ],
+      }
     ],
     footer: {
       message: 'Released under the MIT License.',

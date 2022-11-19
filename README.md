@@ -1,3 +1,7 @@
+<center>
+<img src="https://raw.githubusercontent.com/joaquimnet/ponaserv/main/docs/public/logo.svg" width="256" height="256">
+</center>
+
 # ponaserv
 
 [![NPM](https://img.shields.io/npm/v/ponaserv)](https://www.npmjs.com/package/ponaserv)
@@ -7,13 +11,14 @@ Easily map routes to request handlers.
 ## How to use
 
 ```javascript
-const ponaserv = require('ponaserv');
+/* server.js */
+const { ponaserv } = require('ponaserv');
 const express = require('express');
 const path = require('path');
 
 const app = express();
 
-ponaserv(path.join(__dirname, './services'), app);
+ponaserv(app, { services: path.join(__dirname, 'services') });
 
 app.listen(3000, () => {
   console.log('App listening on port 3000');
@@ -23,6 +28,7 @@ app.listen(3000, () => {
 ## Service example
 
 ```javascript
+/* services/hello.js */
 const express = require('express');
 
 module.exports = {
@@ -69,14 +75,10 @@ module.exports = {
 }
 ```
 
-## Api
+## Getting Started
 
-**ponaserv(app, opts)**
+Head to our [documentation](https://ponaserv.vercel.app) to learn more about ponaserv.
 
-Loads js files ending in .service.js as services.
+## License
 
-| parameter     | description                              |
-| ------------- | ---------------------------------------- |
-| app           | express app                              |
-| opts.services | absolute path to your services directory |
-| opts.debug    | set to true if you want debug logs       |
+Ponaserv is [MIT licensed](./LICENSE).

@@ -1,5 +1,7 @@
 # ponaserv
 
+[![NPM](https://img.shields.io/npm/v/ponaserv)](https://www.npmjs.com/package/ponaserv)
+
 Easily map routes to request handlers.
 
 ## How to use

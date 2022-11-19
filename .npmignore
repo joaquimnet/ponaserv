@@ -6,3 +6,4 @@ jest.config.js
 renovate.json
 rome.json
 tsconfig.json
+Taskfile.yml

@@ -26,3 +26,4 @@ build
 
 dist
 *.tgz
+Taskfile.yml

@@ -30,7 +30,7 @@
     "@types/recursive-readdir": "^2.2.1",
     "@vitest/coverage-c8": "^0.25.2",
     "rome": "^10.0.1",
-    "typescript": "^4.9.3",
+    "typescript": "^5.0.0",
     "vitepress": "^1.0.0-alpha.29",
     "vitest": "^0.25.2",
     "vue": "^3.2.45"

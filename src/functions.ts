@@ -1,5 +1,6 @@
 import * as recursive from 'recursive-readdir';
-import Validator from 'fastest-validator';
+import * as Validator from 'fastest-validator';
+import type V from 'fastest-validator';
 
 export const VirtualSymbol = Symbol('Virtual Ponatech Service');
 
@@ -33,7 +34,7 @@ export function bindActionsAndMethods(service) {
   service[VirtualSymbol] = virtualService;
 
   if (service.actions && isObject(service.actions)) {
-    for (let actionName of Object.keys(service.actions)) {
+    for (const actionName of Object.keys(service.actions)) {
       const action = service.actions[actionName];
       if (typeof action === 'function') {
         virtualService[actionName] = action.bind(virtualService);
@@ -44,7 +45,7 @@ export function bindActionsAndMethods(service) {
   }
 
   if (service.methods && isObject(service.methods)) {
-    for (let method of Object.keys(service.methods)) {
+    for (const method of Object.keys(service.methods)) {
       if (typeof service.methods[method] === 'function') {
         virtualService[method] = service.methods[method].bind(virtualService);
       }
@@ -53,12 +54,14 @@ export function bindActionsAndMethods(service) {
 }
 
 export function getMiddleware(actionItem) {
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const middleware: any[] = [];
   if (!isObject(actionItem) || actionItem === null) {
     return middleware;
   }
   if (actionItem.params) {
-    const v = new Validator();
+    // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+    const v: V = new (Validator as any)();
     middleware.push((req, res, next) => {
       let reqParams = {};
       if (req.body && isObject(req.body)) {
@@ -72,6 +75,8 @@ export function getMiddleware(actionItem) {
       }
       const result = v.validate(reqParams, actionItem.params);
       if (result === true) {
+        // rome-ignore lint/suspicious/noExplicitAny: <explanation>
+        (req as any).$params = reqParams;
         return next();
       }
       return res.status(422).json(result);
@@ -95,33 +100,8 @@ export function parseRouteHandlers(service, routeName) {
   return [method, endpoint, middleware, actionHandler, actionName];
 }
 
-export function handlerWrapper(handler) {
-  const handlerArgs = getArgs(handler);
-
-  const isExpress = handlerArgs[0] && ['req', 'request'].includes(handlerArgs[0].toLowerCase());
-
-  if (isExpress) {
-    return handler;
-  }
-
-  return function wrappedHandler(req, res, next) {
-    let reqParams = {};
-    if (req.body && isObject(req.body)) {
-      reqParams = { ...reqParams, ...req.body };
-    }
-    if (req.query && isObject(req.query)) {
-      reqParams = { ...reqParams, ...req.query };
-    }
-    if (req.params && isObject(req.params)) {
-      reqParams = { ...reqParams, ...req.params };
-    }
-
-    const ctx = { req, res, next, params: reqParams };
-    handler(ctx);
-  };
-}
-
 export function getRoutes(service) {
+  // rome-ignore lint/suspicious/noExplicitAny: <explanation>
   const routes: any[] = [];
 
   bindActionsAndMethods(service);
@@ -133,10 +113,9 @@ export function getRoutes(service) {
       throw new Error(`Handler for action ${actionName} not found in service ${service.name}`);
     }
 
-    const wrappedHandler = handlerWrapper(handler);
-    Object.defineProperty(wrappedHandler, 'name', { value: handler.name });
+    Object.defineProperty(handler, 'name', { value: handler.name });
 
-    routes.push({ method, args: [endpoint, ...middleware, wrappedHandler] });
+    routes.push({ method, args: [endpoint, ...middleware, handler] });
   }
 
   return routes;

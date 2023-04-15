@@ -1,11 +1,21 @@
 # Changelog
 
-## [Unreleased](https://github.com/joaquimnet/ponaserv/tree/HEAD)
+## [v1.0.0](https://github.com/joaquimnet/ponaserv/tree/v1.0.0) (2023-04-15)
 
-[Full Changelog](https://github.com/joaquimnet/ponaserv/compare/v0.2.0...HEAD)
+[Full Changelog](https://github.com/joaquimnet/ponaserv/compare/v0.2.0...v1.0.0)
+
+**Implemented enhancements:**
+
+- feat\(tests\): add vitest and reorganize modules [\#24](https://github.com/joaquimnet/ponaserv/pull/24) ([joaquimnet](https://github.com/joaquimnet))
 
 **Merged pull requests:**
 
+- docs\(readme,config\): better readme header and docs seo [\#26](https://github.com/joaquimnet/ponaserv/pull/26) ([joaquimnet](https://github.com/joaquimnet))
+- docs: add examples, improve docs and add links to sidebar [\#25](https://github.com/joaquimnet/ponaserv/pull/25) ([joaquimnet](https://github.com/joaquimnet))
+- feat\(docs\): add docs website [\#23](https://github.com/joaquimnet/ponaserv/pull/23) ([joaquimnet](https://github.com/joaquimnet))
+- chore: add contributing.md [\#22](https://github.com/joaquimnet/ponaserv/pull/22) ([joaquimnet](https://github.com/joaquimnet))
+- chore: add code\_of\_conduct.md [\#21](https://github.com/joaquimnet/ponaserv/pull/21) ([joaquimnet](https://github.com/joaquimnet))
+- chore: add license.md [\#20](https://github.com/joaquimnet/ponaserv/pull/20) ([joaquimnet](https://github.com/joaquimnet))
 - chore\(deps\): update github/codeql-action action to v2 [\#18](https://github.com/joaquimnet/ponaserv/pull/18) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update actions/setup-node action to v3 [\#16](https://github.com/joaquimnet/ponaserv/pull/16) ([renovate[bot]](https://github.com/apps/renovate))
 - chore\(deps\): update actions/checkout action to v3 [\#15](https://github.com/joaquimnet/ponaserv/pull/15) ([renovate[bot]](https://github.com/apps/renovate))

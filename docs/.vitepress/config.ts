@@ -6,7 +6,6 @@ const config: Partial<SiteData<any>> = {
   description: 'Node library that lets you easily map routes to request handlers in express.',
   // @ts-expect-error
   lastUpdated: true,
-  cleanUrls: 'without-subfolders',
   head: [
     ['meta', { name: 'theme-color', content: '#ff5719' }],
     ['meta', { name: 'og:image', content: 'https://ponaserv.vercel.app/code.png' }],

@@ -29,3 +29,4 @@ dist
 Taskfile.yml
 docs/.vitepress/cache
 docs/.vitepress/dist
+publish.sh

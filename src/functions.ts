@@ -63,7 +63,7 @@ export function getMiddleware(actionItem) {
     // rome-ignore lint/suspicious/noExplicitAny: <explanation>
     const v: V = new (Validator as any)();
     middleware.push((req, res, next) => {
-      let reqParams = {};
+      let reqParams = { ...req.params };
       if (req.body && isObject(req.body)) {
         reqParams = { ...reqParams, ...req.body };
       }
